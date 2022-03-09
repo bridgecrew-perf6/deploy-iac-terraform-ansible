@@ -33,3 +33,7 @@ variable "region-worker" {
   default = "us-east-2"
 }
 
+variable "webserver-port" {
+  type    = number
+  default = 80
+}
