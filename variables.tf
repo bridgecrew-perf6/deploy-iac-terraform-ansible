@@ -13,11 +13,6 @@ variable "instance-type" {
   default = "t3.micro"
 }
 
-variable "dns-name" {
-  type    = string
-  default = "<public-hosted-zone-ending-with-dot>"
-}
-
 variable "profile" {
   type    = string
   default = "default"
@@ -36,4 +31,9 @@ variable "region-worker" {
 variable "webserver-port" {
   type    = number
   default = 80
+}
+
+variable "dns-name" {
+  type    = string
+  default = "cmcloudlab1823.info.co."
 }

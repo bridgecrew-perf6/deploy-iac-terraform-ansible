@@ -29,17 +29,37 @@ resource "aws_lb_target_group" "app-lb-tg" {
   }
 }
 
+#Create new listener on tcp/443
+resource "aws_lb_listener" "jenkins-listener" {
+  provider          = aws.region-master
+  load_balancer_arn = aws_lb.application-lb.arn
+  port              = "443"
+  protocol          = "HTTP"
+  default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+#HTTPS ALB Setup, modify existing listener on TCP/80 and redirect to HTTPS/443
 resource "aws_lb_listener" "jenkins-listener-http" {
   provider          = aws.region-master
   load_balancer_arn = aws_lb.application-lb.arn
   port              = "80"
   protocol          = "HTTP"
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.app-lb-tg.id
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
-
 resource "aws_lb_target_group_attachment" "jenkins-master-attach" {
   provider         = aws.region-master
   target_group_arn = aws_lb_target_group.app-lb-tg.arn
